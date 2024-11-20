@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.home.repository.ApartmentRepository">
+    <select id="findApartmentsByDongCode" resultType="com.ssafy.home.dto.apartment.ApartmentDto">
+        SELECT apt_seq        AS aptSeq,
+               sgg_cd         AS sggCd,
+               umd_cd         AS umdCd,
+               umd_nm         AS umdNm,
+               jibun          AS jibun,
+               road_nm_sgg_cd AS roadNmSggCd,
+               road_nm        AS roadNm,
+               road_nm_bonbun AS roadNmBonbun,
+               road_nm_bubun  AS roadNmBubun,
+               apt_nm         AS aptNm,
+               build_year     AS buildYear,
+               latitude       AS latitude,
+               longitude      AS longitude
+        FROM Apartment
+        WHERE CONCAT(sgg_cd, umd_cd) = #{dongCode}
+    </select>
+
+    <select id="findDongCode" resultType="com.ssafy.home.dto.apartment.DongCodeDto">
+        SELECT dong_code  AS dongCode,
+               sido_name  AS sidoName,
+               gugun_name AS gugunName,
+               dong_name  AS dongName
+        FROM Dong_Code
+        WHERE sido_name = #{sidoName}
+          AND gugun_name = #{gugunName}
+          AND dong_name = #{dongName}
+    </select>
+</mapper>
