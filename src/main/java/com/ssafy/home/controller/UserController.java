@@ -1,5 +1,6 @@
 package com.ssafy.home.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,11 @@ public class UserController {
 	@PostMapping
 	public SuccessResponse<Boolean> createUser(@RequestBody SignUpRequestDto signUpRequestDto) {
 		return SuccessResponse.of(userService.insertUser(signUpRequestDto));
+	}
+
+	@GetMapping("/test")
+	public SuccessResponse<String> test() {
+		return SuccessResponse.of("test");
 	}
 
 }
