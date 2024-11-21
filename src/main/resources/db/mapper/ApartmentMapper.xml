@@ -13,6 +13,7 @@
         <result property="roadNmBonbun" column="road_nm_bonbun"/>
         <result property="roadNmBubun" column="road_nm_bubun"/>
         <result property="aptNm" column="apt_nm"/>
+        <result property="aptNm" column="apt_nm"/>
         <result property="buildYear" column="build_year"/>
         <result property="latitude" column="latitude"/>
         <result property="longitude" column="longitude"/>
@@ -24,6 +25,16 @@
         <result property="gugunName" column="gugun_name"/>
         <result property="dongName" column="dong_name"/>
     </resultMap>
+
+    <resultMap id="ApartmentInfoResultMap" type="com.ssafy.home.dto.apartment.ApartmentInfoDto">
+        <result property="apartmentInfoId" column="apartment_info_id"/>
+        <result property="aptSeq" column="apt_seq"/>
+        <result property="aptImg" column="apt_img"/>
+        <result property="excluUseAr" column="exclu_use_ar"/>
+        <result property="floor" column="floor"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
 
     <select id="findApartmentsByDongCode" resultMap="ApartmentResultMap">
         SELECT apt_seq,
@@ -52,6 +63,28 @@
         WHERE sido_name = #{sidoName}
           AND gugun_name = #{gugunName}
           AND dong_name = #{dongName}
+    </select>
+
+    <select id="findApartmentsByAptSeqList" parameterType="list" resultMap="ApartmentResultMap">
+        SELECT
+        apt_seq,
+        sgg_cd,
+        umd_cd,
+        umd_nm,
+        jibun,
+        road_nm_sgg_cd,
+        road_nm,
+        road_nm_bonbun,
+        road_nm_bubun,
+        apt_nm,
+        build_year,
+        latitude,
+        longitude
+        FROM Apartment
+        WHERE apt_seq IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 
 </mapper>

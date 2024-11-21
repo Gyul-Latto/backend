@@ -20,4 +20,7 @@ public interface ApartmentRepository {
 		@Param("gugunName") String gugunName,
 		@Param("dongName") String dongName
 	);
+
+	List<ApartmentDto> findApartmentsByAptSeqList(@Param("list") List<String> aptSeqList);
+
 }
