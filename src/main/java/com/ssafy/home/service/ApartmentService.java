@@ -17,7 +17,7 @@ public class ApartmentService {
 	private final ApartmentRepository apartmentRepository;
 
 	public List<ApartmentDto> searchApartments(String sido, String gugun, String dong) {
-		// 시/구/동 정보를 사용하여 동 코드 조회
+		// 시/구/동 정보로 동 코드 조회
 		DongCodeDto dongCodeDto = apartmentRepository.findDongCode(sido, gugun, dong);
 
 		if (dongCodeDto == null) {
