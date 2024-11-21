@@ -22,5 +22,4 @@ public class UserController {
 	public SuccessResponse<Boolean> createUser(@RequestBody SignUpRequestDto signUpRequestDto) {
 		return SuccessResponse.of(userService.insertUser(signUpRequestDto));
 	}
-
 }

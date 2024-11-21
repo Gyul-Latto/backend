@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.home.repository.UserRepository">
+
+    <!-- ResultMap to map DB columns to DTO fields -->
+    <resultMap id="userResultMap" type="UserDto">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="birthday" column="birthday"/>
+        <result property="gender" column="gender"/>
+    </resultMap>
+
+    <insert id="insertUser" parameterType="SignUpRequestDto">
+        insert into User (username, password, email, birthday, gender)
+        values (#{username}, #{password}, #{email}, #{birthday}, #{gender})
+    </insert>
+
+    <select id="findByEmail" parameterType="String" resultMap="userResultMap">
+        SELECT user_id, username, password, email, birthday, gender
+        FROM User
+        WHERE email = #{email}
+    </select>
+
+    <select id="findByUserId" parameterType="Long" resultMap="userResultMap">
+        SELECT user_id, username, password, email, birthday, gender
+        FROM User
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>
+
+        <!-- 1. namespace 설정 2. column은 db, proerty -->
