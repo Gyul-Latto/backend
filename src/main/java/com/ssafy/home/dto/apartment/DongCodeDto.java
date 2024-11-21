@@ -1,12 +1,12 @@
 package com.ssafy.home.dto.apartment;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
+@AllArgsConstructor
 public class DongCodeDto {
 	private String dongCode;
 	private String sidoName;
