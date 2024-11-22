@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.home.dto.user.UserDto;
 import com.ssafy.home.repository.UserRepository;
 import com.ssafy.home.security.auth.dto.CustomUserDetails;
+import com.ssafy.home.security.auth.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

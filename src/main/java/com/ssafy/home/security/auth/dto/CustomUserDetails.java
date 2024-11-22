@@ -7,8 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.ssafy.home.dto.user.UserDto;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -21,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
 		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 	}
 
-	public long getUserId() {
+	public Long getUserId() {
 		return userDto.getUserId();
 	}
 
