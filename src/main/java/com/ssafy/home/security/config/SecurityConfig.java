@@ -1,5 +1,7 @@
 package com.ssafy.home.security.config;
 
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,12 +14,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.ssafy.home.repository.UserRepository;
 import com.ssafy.home.security.filter.JWTFilter;
 import com.ssafy.home.security.filter.LoginFilter;
 import com.ssafy.home.security.jwt.JWTUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -43,6 +48,24 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+		// cors 설정
+		http
+			.cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+				@Override
+				public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+					CorsConfiguration configuration = new CorsConfiguration();
+
+					configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+					configuration.setAllowedMethods(Collections.singletonList("*"));
+					configuration.setAllowCredentials(true);
+					configuration.setAllowedHeaders(Collections.singletonList("*"));
+					configuration.setMaxAge(3600L);
+					configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+					return configuration;
+				}
+			})));
+
 		//csrf disable
 		http
 			.csrf((auth) -> auth.disable());
@@ -59,7 +82,7 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests((auth) -> auth
 				.requestMatchers(HttpMethod.POST, "/api/members").permitAll() // POST 요청만 허용
-				.requestMatchers("/", "/login").permitAll() // 기타 경로는 모두 허용
+				.requestMatchers("/**", "/login").permitAll() // 기타 경로는 모두 허용
 				.anyRequest().authenticated() // 나머지 요청은 인증 필요
 			);
 
