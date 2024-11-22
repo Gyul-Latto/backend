@@ -29,6 +29,21 @@
         WHERE user_id = #{userId}
     </select>
 
+    <update id="updateUser" parameterType="UserUpdateDto">
+        UPDATE User
+        SET
+        username = #{username},
+        password = #{password},
+        birthday = #{birthday},
+        gender = #{gender}
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUser" parameterType="Long">
+        DELETE FROM User
+        WHERE user_id = #{urlUserId}
+    </delete>
+
 </mapper>
 
         <!-- 1. namespace 설정 2. column은 db, proerty -->
