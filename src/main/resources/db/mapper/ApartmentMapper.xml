@@ -111,6 +111,10 @@
         <foreach item="item" collection="list" open="(" separator="," close=")">
             #{item}
         </foreach>
+        ORDER BY
+        <foreach item="item" index="index" collection="list" separator=",">
+            CASE Apartment.apt_seq WHEN #{item} THEN #{index} END
+        </foreach>;
     </select>
 
 
