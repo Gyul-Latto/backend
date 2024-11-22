@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.home.common.response.SuccessResponse;
+import com.ssafy.home.dto.apartment.ApartmentDetailDto;
 import com.ssafy.home.dto.apartment.ApartmentDto;
 import com.ssafy.home.service.ApartmentService;
 import com.ssafy.home.service.RecommendationService;
@@ -26,21 +27,23 @@ public class RecommendationController {
 	private final ApartmentService apartmentService;
 
 	@GetMapping
-	public SuccessResponse<List<ApartmentDto>> recommendApartments(
+	public SuccessResponse<List<ApartmentDetailDto>> recommendApartments(
 		@RequestParam int userId,
 		@RequestParam String recommendationType) {
 		try {
 			// FastAPI에서 추천 결과 가져오기
 			List<String> aptSeqList = recommendationService.getRecommendations(userId, recommendationType).stream()
-				.map(result -> (String)result.get("apt_seq"))
+				.map(result -> (String) result.get("apt_seq"))
 				.collect(Collectors.toList());
-
+			System.out.println(aptSeqList);
 			// 추천된 아파트 리스트 조회
-			List<ApartmentDto> apartments = apartmentService.getApartmentsByAptSeqList(aptSeqList);
+			List<ApartmentDetailDto> apartments = apartmentService.getApartmentsByAptSeqList(aptSeqList);
 
 			return SuccessResponse.of(apartments);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return SuccessResponse.of(500, "추천 시스템 호출 실패: " + e.getMessage(), null);
 		}
 	}
+
 }

@@ -35,6 +35,26 @@
         <result property="description" column="description"/>
     </resultMap>
 
+    <resultMap id="ApartmentDetailResultMap" type="com.ssafy.home.dto.apartment.ApartmentDetailDto">
+        <result property="aptSeq" column="apt_seq"/>
+        <result property="sggCd" column="sgg_cd"/>
+        <result property="umdCd" column="umd_cd"/>
+        <result property="umdNm" column="umd_nm"/>
+        <result property="jibun" column="jibun"/>
+        <result property="roadNmSggCd" column="road_nm_sgg_cd"/>
+        <result property="roadNm" column="road_nm"/>
+        <result property="roadNmBonbun" column="road_nm_bonbun"/>
+        <result property="roadNmBubun" column="road_nm_bubun"/>
+        <result property="aptNm" column="apt_nm"/>
+        <result property="buildYear" column="build_year"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="aptImg" column="apt_img" javaType="java.lang.String"/>
+        <result property="excluUseAr" column="exclu_use_ar"/>
+        <result property="floor" column="floor"/>
+        <result property="description" column="description"/>
+        <result property="apartmentInfoId" column="apartment_info_id"/>
+    </resultMap>
 
     <select id="findApartmentsByDongCode" resultMap="ApartmentResultMap">
         SELECT apt_seq,
@@ -65,9 +85,9 @@
           AND dong_name = #{dongName}
     </select>
 
-    <select id="findApartmentsByAptSeqList" parameterType="list" resultMap="ApartmentResultMap">
+    <select id="findApartmentsByAptSeqList" parameterType="list" resultMap="ApartmentDetailResultMap">
         SELECT
-        apt_seq,
+        Apartment.apt_seq,
         sgg_cd,
         umd_cd,
         umd_nm,
@@ -79,12 +99,19 @@
         apt_nm,
         build_year,
         latitude,
-        longitude
+        longitude,
+        apt_img,
+        exclu_use_ar,
+        floor,
+        description
         FROM Apartment
-        WHERE apt_seq IN
+        JOIN Apartment_Info
+        ON Apartment.apt_seq = Apartment_Info.apt_seq
+        WHERE Apartment.apt_seq IN
         <foreach item="item" collection="list" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
+
 
 </mapper>

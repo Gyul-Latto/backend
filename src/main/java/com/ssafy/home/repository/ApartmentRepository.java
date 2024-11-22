@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.ssafy.home.dto.apartment.ApartmentDetailDto;
 import com.ssafy.home.dto.apartment.ApartmentDto;
 import com.ssafy.home.dto.apartment.DongCodeDto;
 
@@ -21,6 +22,6 @@ public interface ApartmentRepository {
 		@Param("dongName") String dongName
 	);
 
-	List<ApartmentDto> findApartmentsByAptSeqList(@Param("list") List<String> aptSeqList);
+	List<ApartmentDetailDto> findApartmentsByAptSeqList(@Param("list") List<String> aptSeqList);
 
 }

@@ -1,12 +1,13 @@
 package com.ssafy.home.dto.apartment;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
+@Builder
 public class UserAparmentDto {
 	private int userApartmentLikeId;
 	private int userId;

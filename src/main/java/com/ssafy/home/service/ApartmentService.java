@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.home.dto.apartment.ApartmentDetailDto;
 import com.ssafy.home.dto.apartment.ApartmentDto;
 import com.ssafy.home.dto.apartment.DongCodeDto;
 import com.ssafy.home.repository.ApartmentRepository;
@@ -29,8 +30,8 @@ public class ApartmentService {
 		return apartmentRepository.findApartmentsByDongCode(dongCodeDto.getDongCode());
 	}
 
-	// 여러 아파트 기본 정보 조회
-	public List<ApartmentDto> getApartmentsByAptSeqList(List<String> aptSeqList) {
+	// 여러 아파트 정보 조회
+	public List<ApartmentDetailDto> getApartmentsByAptSeqList(List<String> aptSeqList) {
 		if (aptSeqList == null || aptSeqList.isEmpty()) {
 			throw new IllegalArgumentException("aptSeqList가 비어 있습니다.");
 		}

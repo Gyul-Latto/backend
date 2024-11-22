@@ -1,12 +1,13 @@
 package com.ssafy.home.dto.apartment;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
 public class ApartmentInfoDto {
 	private int apartmentInfoId;
 	private String aptSeq;
