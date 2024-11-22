@@ -10,9 +10,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ssafy.home.common.exception.exceptions.BadRequestException;
 import com.ssafy.home.common.response.ErrorCode;
-import com.ssafy.home.dto.user.UserDto;
 import com.ssafy.home.repository.UserRepository;
 import com.ssafy.home.security.auth.dto.CustomUserDetails;
+import com.ssafy.home.security.auth.dto.UserDto;
 import com.ssafy.home.security.jwt.JWTUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
