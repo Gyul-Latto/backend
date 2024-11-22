@@ -1,14 +1,13 @@
 package com.ssafy.home.dto.apartment;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @Builder
-public class ApartmentDto {
+public class ApartmentDetailDto {
 	private String aptSeq;
 	private String sggCd;
 	private String umdCd;
@@ -22,4 +21,8 @@ public class ApartmentDto {
 	private int buildYear;
 	private String latitude;
 	private String longitude;
+	private String aptImg;
+	private String excluUseAr;
+	private String floor;
+	private String description;
 }

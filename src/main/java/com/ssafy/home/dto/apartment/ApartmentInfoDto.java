@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @Builder
-public class UserAparmentDto {
-	private int userApartmentLikeId;
-	private int userId;
+public class ApartmentInfoDto {
+	private int apartmentInfoId;
 	private String aptSeq;
+	private String aptImg;
+	private String excluUseAr;
+	private String floor;
+	private String description;
 }

@@ -23,6 +23,7 @@ public class ApartmentController {
 
 	private final ApartmentService apartmentService;
 
+	// 시/구/동 정보로 아파트 리스트 조회
 	@PostMapping("/apt/search")
 	public SuccessResponse<List<ApartmentDto>> searchApartments(@RequestBody DongCodeDto dongCodeDto) {
 		System.out.println("Received DongCodeDto: " + dongCodeDto);
@@ -35,3 +36,4 @@ public class ApartmentController {
 	}
 
 }
+
