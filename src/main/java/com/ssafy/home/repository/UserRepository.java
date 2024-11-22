@@ -5,7 +5,8 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.home.dto.user.SignUpRequestDto;
-import com.ssafy.home.dto.user.UserDto;
+import com.ssafy.home.dto.user.UserUpdateDto;
+import com.ssafy.home.security.auth.dto.UserDto;
 
 @Mapper
 public interface UserRepository {
@@ -17,4 +18,9 @@ public interface UserRepository {
 
 	// 사용자 ID로 사용자 조회
 	Optional<UserDto> findByUserId(Long userId);
+
+	// 사용자 삭제
+	int deleteUser(Long urlUserId);
+
+	int updateUser(UserUpdateDto userUpdateDto);
 }
