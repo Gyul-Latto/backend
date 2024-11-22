@@ -2,6 +2,7 @@ package com.ssafy.home.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -57,8 +58,10 @@ public class SecurityConfig {
 		//경로별 인가 작업
 		http
 			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/", "/api/v1/members", "/login").permitAll()
-				.anyRequest().authenticated());
+				.requestMatchers(HttpMethod.POST, "/api/members").permitAll() // POST 요청만 허용
+				.requestMatchers("/", "/login").permitAll() // 기타 경로는 모두 허용
+				.anyRequest().authenticated() // 나머지 요청은 인증 필요
+			);
 
 		// JWT 필터 추가
 		http
@@ -69,7 +72,7 @@ public class SecurityConfig {
 			.addFilterAt(
 				new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
 				UsernamePasswordAuthenticationFilter.class);
-		
+
 		// 예외 처리
 		http.
 			exceptionHandling(
