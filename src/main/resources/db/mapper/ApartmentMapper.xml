@@ -13,7 +13,6 @@
         <result property="roadNmBonbun" column="road_nm_bonbun"/>
         <result property="roadNmBubun" column="road_nm_bubun"/>
         <result property="aptNm" column="apt_nm"/>
-        <result property="aptNm" column="apt_nm"/>
         <result property="buildYear" column="build_year"/>
         <result property="latitude" column="latitude"/>
         <result property="longitude" column="longitude"/>
@@ -56,8 +55,9 @@
         <result property="apartmentInfoId" column="apartment_info_id"/>
     </resultMap>
 
-    <select id="findApartmentsByDongCode" resultMap="ApartmentResultMap">
-        SELECT apt_seq,
+    <!--시구동 검색-->
+    <select id="findApartmentsByDongCode" resultMap="ApartmentDetailResultMap">
+        SELECT Apartment.apt_seq,
                sgg_cd,
                umd_cd,
                umd_nm,
@@ -69,11 +69,18 @@
                apt_nm,
                build_year,
                latitude,
-               longitude
+               longitude,
+               apt_img,
+               exclu_use_ar,
+               floor,
+               description
         FROM Apartment
-        WHERE CONCAT(sgg_cd, umd_cd) = #{dongCode}
+                 JOIN Apartment_Info
+                      ON Apartment.apt_seq = Apartment_Info.apt_seq
+        WHERE CONCAT(Apartment.sgg_cd, Apartment.umd_cd) = #{dongCode}
     </select>
 
+    <!--동코드 찾기-->
     <select id="findDongCode" resultMap="DongCodeResultMap">
         SELECT dong_code,
                sido_name,
@@ -85,6 +92,7 @@
           AND dong_name = #{dongName}
     </select>
 
+    <!--추천,성향 불러오기-->
     <select id="findApartmentsByAptSeqList" parameterType="list" resultMap="ApartmentDetailResultMap">
         SELECT
         Apartment.apt_seq,
@@ -115,6 +123,33 @@
         <foreach item="item" index="index" collection="list" separator=",">
             CASE Apartment.apt_seq WHEN #{item} THEN #{index} END
         </foreach>;
+    </select>
+
+    <!--아파트 이름으로 검색-->
+    <select id="findApartmentsByName" resultMap="ApartmentDetailResultMap">
+        SELECT Apartment.apt_seq,
+               sgg_cd,
+               umd_cd,
+               umd_nm,
+               jibun,
+               road_nm_sgg_cd,
+               road_nm,
+               road_nm_bonbun,
+               road_nm_bubun,
+               apt_nm,
+               build_year,
+               latitude,
+               longitude,
+               apt_img,
+               exclu_use_ar,
+               floor,
+               description
+        FROM Apartment
+                 JOIN
+             Apartment_Info
+             ON
+                 Apartment.apt_seq = Apartment_Info.apt_seq
+        WHERE apt_nm LIKE CONCAT('%', #{aptName}, '%')
     </select>
 
 
