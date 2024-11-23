@@ -33,6 +33,7 @@ public class UserService {
 			.username(user.getUsername())
 			.birthday(user.getBirthday())
 			.gender(user.getGender())
+			.dongCode(user.getDongCode())
 			.build()
 		).orElseThrow(() -> new BadRequestException(ErrorCode.USER_NOT_FOUND));
 	}
