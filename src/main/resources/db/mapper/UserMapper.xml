@@ -10,21 +10,22 @@
         <result property="email" column="email"/>
         <result property="birthday" column="birthday"/>
         <result property="gender" column="gender"/>
+        <result property="dongCode" column="dong_code"/>
     </resultMap>
 
     <insert id="insertUser" parameterType="SignUpRequestDto">
-        insert into User (username, password, email, birthday, gender)
-        values (#{username}, #{password}, #{email}, #{birthday}, #{gender})
+        insert into User (username, password, email, birthday, gender, dong_code)
+        values (#{username}, #{password}, #{email}, #{birthday}, #{gender}, #{dongCode})
     </insert>
 
     <select id="findByEmail" parameterType="String" resultMap="userResultMap">
-        SELECT user_id, username, password, email, birthday, gender
+        SELECT user_id, username, password, email, birthday, gender, dong_code
         FROM User
         WHERE email = #{email}
     </select>
 
     <select id="findByUserId" parameterType="Long" resultMap="userResultMap">
-        SELECT user_id, username, password, email, birthday, gender
+        SELECT user_id, username, password, email, birthday, gender, dong_code
         FROM User
         WHERE user_id = #{userId}
     </select>
@@ -35,7 +36,8 @@
         username = #{username},
         password = #{password},
         birthday = #{birthday},
-        gender = #{gender}
+        gender = #{gender},
+        dong_code = #{dongCode}
         WHERE user_id = #{userId}
     </update>
 

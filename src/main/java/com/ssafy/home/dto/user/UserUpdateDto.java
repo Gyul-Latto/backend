@@ -18,4 +18,5 @@ public class UserUpdateDto {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthday;
 	private int gender;
+	private String dongCode;
 }
