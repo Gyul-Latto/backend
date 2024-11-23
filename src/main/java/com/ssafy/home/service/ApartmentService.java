@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.home.dto.apartment.ApartmentDetailDto;
-import com.ssafy.home.dto.apartment.ApartmentDto;
 import com.ssafy.home.dto.apartment.DongCodeDto;
 import com.ssafy.home.repository.ApartmentRepository;
 
@@ -18,14 +17,13 @@ public class ApartmentService {
 	private final ApartmentRepository apartmentRepository;
 
 	// 시/구/동 정보로 아파트 리스트 조회
-	public List<ApartmentDto> searchApartments(String sido, String gugun, String dong) {
+	public List<ApartmentDetailDto> searchApartments(String sido, String gugun, String dong) {
 		// 시/구/동 정보로 동 코드 조회
+		
 		DongCodeDto dongCodeDto = apartmentRepository.findDongCode(sido, gugun, dong);
-
 		if (dongCodeDto == null) {
 			throw new IllegalArgumentException("유효하지 않은 주소: " + sido + ", " + gugun + ", " + dong);
 		}
-
 		// 동 코드로 아파트 리스트 조회
 		return apartmentRepository.findApartmentsByDongCode(dongCodeDto.getDongCode());
 	}
@@ -36,5 +34,14 @@ public class ApartmentService {
 			throw new IllegalArgumentException("aptSeqList가 비어 있습니다.");
 		}
 		return apartmentRepository.findApartmentsByAptSeqList(aptSeqList);
+	}
+
+	// 아파트 이름으로 검색
+	public List<ApartmentDetailDto> searchApartmentsByName(String aptName) {
+		// 검색어가 비어 있을 경우 빈 리스트 반환
+		if (aptName == null || aptName.isBlank()) {
+			return List.of();
+		}
+		return apartmentRepository.findApartmentsByName(aptName);
 	}
 }
