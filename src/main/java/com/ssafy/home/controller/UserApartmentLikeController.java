@@ -37,14 +37,14 @@ public class UserApartmentLikeController {
 		return SuccessResponse.of("좋아요 제거 완료");
 	}
 
-	// 사용자가 좋아요한 아파트 보기
+	// 사용자가 좋아요한 아파트 보기 (리스트)
 	@GetMapping("/{userId}")
 	public SuccessResponse<List<UserApartmentLikeDto>> findLikesByUserId(@PathVariable int userId) {
 		List<UserApartmentLikeDto> likes = likeService.findLikesByUserId(userId);
 		return SuccessResponse.of(likes);
 	}
 
-	// 특정 아파트에 대해 좋아요 상태 확인
+	// 사용자가 아파트 좋아요 했는지 여부
 	@GetMapping
 	public SuccessResponse<Boolean> isLikedByUser(@RequestParam int userId, @RequestParam String aptSeq) {
 		boolean isLiked = likeService.isLikedByUser(userId, aptSeq);
