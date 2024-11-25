@@ -43,4 +43,11 @@ public class UserApartmentLikeController {
 		List<UserApartmentLikeDto> likes = likeService.findLikesByUserId(userId);
 		return SuccessResponse.of(likes);
 	}
+
+	// 특정 아파트에 대해 좋아요 상태 확인
+	@GetMapping
+	public SuccessResponse<Boolean> isLikedByUser(@RequestParam int userId, @RequestParam String aptSeq) {
+		boolean isLiked = likeService.isLikedByUser(userId, aptSeq);
+		return SuccessResponse.of(isLiked);
+	}
 }
