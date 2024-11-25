@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.home.dto.apartment.ApartmentDetailDto;
 import com.ssafy.home.dto.apartment.UserApartmentLikeDto;
 import com.ssafy.home.repository.UserApartmentLikeRepository;
 
@@ -39,7 +40,7 @@ public class UserApartmentLikeService {
 	}
 
 	// 사용자가 좋아요한 아파트 목록 조회
-	public List<UserApartmentLikeDto> findLikesByUserId(int userId) {
+	public List<ApartmentDetailDto> findLikesByUserId(int userId) {
 		return likeRepository.findLikesByUserId(userId);
 	}
 
