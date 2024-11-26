@@ -2,72 +2,75 @@ package com.ssafy.home.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.home.dto.views.DailyViewsDto;
+import com.ssafy.home.repository.RedisViewCountRepository;
+import com.ssafy.home.repository.ViewCountRepository;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ViewCountService {
-	private final RedisTemplate<String, String> redisTemplate;
+	private final RedisViewCountRepository redisViewCountRepository;
+	private final ViewCountRepository viewCountRepository;
 
 	/**
-	 * 1시간 단위 조회수 업데이트
-	 * @param aptSeq 아파트 ID
-	 * @param timeSlot 시간대 (예: "00-01")
+	 * 1시간마다 실행: 1시간 단위 조회수를 일간 조회수에 합산
 	 */
-	public void updateHourlyViewCount(String aptSeq, String timeSlot) {
-		String key = "apartment:views:" + timeSlot;
-		// 조회수 1 증가 또는 새로 추가
-		redisTemplate.opsForZSet().incrementScore(key, aptSeq, 1);
+	// @Scheduled(cron = "0 0 * * * *")  // 매 정각에 실행
+	@Scheduled(cron = "*/10 * * * * *") // test 용 10초마다 실행
+	public void processHourlyToDailyViewCounts() {
+		log.info("==== 1시간 단위 조회수를 일간 조회수에 합산합니다. ====");
+		String timeSlot = getCurrentTimeSlot(); // ex) "2024-11-25:00-01"
+		String hourlyKey = "apartment:views:" + timeSlot;
+		String dailyKey = "apartment:views:daily" + timeSlot.split(":")[0];
+
+		// 1시간 단위 조회수를 일간 조회수에 합산
+		redisViewCountRepository.mergeHourlyToDaily(hourlyKey, dailyKey);
+
+		log.info("==== 1시간 단위 조회수를 일간 조회수에 합산 완료 ====");
+
+		// 1시간 단위 조회수 DB에 저장
+		log.info("==== 1시간 단위 조회수를 DB에 삽입합니다. ====");
+		// Redis에서 value와 score 가져오기
+		Map<String, Double> viewCounts = redisViewCountRepository.getZSetValueAndScores(hourlyKey);
+
+		// 데이터베이스에 저장
+		viewCounts.forEach((aptSeq, views) -> {
+			DailyViewsDto dailyViewsDto = DailyViewsDto.builder()
+				.aptSeq(aptSeq)
+				.viewCount(views.longValue())
+				.date(timeSlot.split(":")[0])
+				.hour(timeSlot.split(":")[1])
+				.build();
+			viewCountRepository.saveViewCount(dailyViewsDto);
+		});
+		log.info("==== 1시간 단위 조회수를 DB에 삽입 완료 ====");
 	}
 
 	/**
-	 * 1시간 단위 조회수를 일간 조회수에 합산
-	 * @param hourlyKey 1시간 단위 조회수 Sorted Set의 키 (예: apartment:views:2024-11-25:00-01)
-	 * @param dailyKey  일간 조회수 Sorted Set의 키 (예: apartment:views:2024-11-25)
+	 * 매일 00시마다 실행: 1일 단위 조회수를 DB에 삽입
 	 */
-	public void mergeHourlyToDaily(String hourlyKey, String dailyKey) {
-		// 1시간 단위 조회수 데이터 가져오기
-		Set<String> aptSeqs = redisTemplate.opsForZSet().range(hourlyKey, 0, -1);
-
-		if (aptSeqs != null) {
-			for (String aptSeq : aptSeqs) {
-				// 아파트 seq의 조회수를 가져옴
-				Double score = redisTemplate.opsForZSet().score(hourlyKey, aptSeq);
-				if (score != null) {
-					// 일간 조회수 Sorted Set에 누적
-					redisTemplate.opsForZSet().incrementScore(dailyKey, aptSeq, score);
-				}
-			}
-		}
-	}
+	// @Scheduled(cron = "0 0 0 * * *")  // 매일 자정에 실행
+	// public void processDailyViewCounts() {
+	// 	log.info("==== 매일 자정에 일간 조회수를 DB에 삽입합니다. ====");
+	// 	String dailyKey = "apartment:views:daily" + getCurrentTimeSlot().split(":")[0]; // ex) "2024-11-25"
+	//
+	// 	// 일간 조회수를 DB에 삽입
+	//
+	// }
 
 	/**
-	 * Redis에서 특정 키 삭제
-	 * @param key 삭제할 Redis 키
+	 * 현재 시간대를 가져옴
+	 * @return 현재 시간대 (예: "2024-11-25:00-01")
 	 */
-	public void deleteRedisKey(String key) {
-		redisTemplate.delete(key);
-	}
-
-	/**
-	 * 상위 10개 조회수가 많은 아파트를 반환
-	 * @param key 조회할 Redis Key (예: "apartment:views:00-01" 또는 "apartment:views:2024-11-25")
-	 * @return 상위 10개 aptSeq 리스트
-	 */
-	public List<String> getTop10Apartments(String key) {
-		// 상위 10개 조회수 아파트 (조회수가 높은 순)
-		Set<String> topApartments = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
-		// 아파트가 없으면 빈 리스트 반환
-		return new ArrayList<>(topApartments);
-	}
-
 	private String getCurrentTimeSlot() {
 		LocalDateTime now = LocalDateTime.now();
 		int hour = now.getHour();
