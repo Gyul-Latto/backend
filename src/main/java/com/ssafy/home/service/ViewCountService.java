@@ -2,6 +2,7 @@ package com.ssafy.home.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,16 +22,35 @@ public class ViewCountService {
 	private final RedisViewCountRepository redisViewCountRepository;
 	private final ViewCountRepository viewCountRepository;
 
+	public void updateViewCount(String aptSeq) {
+		redisViewCountRepository.updateHourlyViewCount(aptSeq, getCurrentTimeSlot());
+	}
+
+	public List<String> getTopHourViews(String date, int hour, int count) {
+		// "apartment:views:hour:2024-11-25:00-01"
+		String key = String.format("apartment:views:hour:%s:%02d-%02d", date, hour, hour + 1);
+		return redisViewCountRepository.getTopNApartments(key, count);
+	}
+
+	public List<String> getTopDailyViews(String date, int count) {
+		// "apartment:views:daily:2024-11-25"
+		String key = "apartment:views:daily:" + date;
+		log.info("key: {}", key);
+		return redisViewCountRepository.getTopNApartments(key, count);
+	}
+
 	/**
 	 * 1시간마다 실행: 1시간 단위 조회수를 일간 조회수에 합산
 	 */
 	// @Scheduled(cron = "0 0 * * * *")  // 매 정각에 실행
-	@Scheduled(cron = "*/10 * * * * *") // test 용 10초마다 실행
+	@Scheduled(cron = "0 59 * * * *") // 59분 마다 업데이트
 	public void processHourlyToDailyViewCounts() {
 		log.info("[ 1시간 조회수 ==> 일간 조회수에 합산 시작 ]");
 		String timeSlot = getCurrentTimeSlot(); // ex) "2024-11-25:00-01"
 		String hourlyKey = "apartment:views:hour:" + timeSlot;
+		log.info("hourlyKey: {}", hourlyKey);
 		String dailyKey = "apartment:views:daily:" + timeSlot.split(":")[0];
+		log.info("dailyKey: {}", dailyKey);
 
 		// 1시간 단위 조회수를 일간 조회수에 합산
 		redisViewCountRepository.mergeHourlyToDaily(hourlyKey, dailyKey);
@@ -62,8 +82,8 @@ public class ViewCountService {
 	/**
 	 * 매일 00시마다 실행: 1일 단위 조회수를 DB에 삽입
 	 */
-	// @Scheduled(cron = "0 0 0 * * *")  // 매일 자정에 실행
-	@Scheduled(cron = "*/30 * * * * *") // test용 30초마다 실행
+	@Scheduled(cron = "0 0 0 * * *")  // 매일 자정에 실행
+	// @Scheduled(cron = "*/30 * * * * *") // test용 30초마다 실행
 	public void processDailyViewCounts() {
 
 		log.info("[ 일간 조회수 ==> DB에 삽입 시작 ]");
@@ -98,10 +118,6 @@ public class ViewCountService {
 		int hour = now.getHour();
 		String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		return String.format("%s:%02d-%02d", date, hour, hour + 1);
-	}
-
-	public void updateViewCount(String aptSeq) {
-		redisViewCountRepository.updateHourlyViewCount(aptSeq, getCurrentTimeSlot());
 	}
 
 }
