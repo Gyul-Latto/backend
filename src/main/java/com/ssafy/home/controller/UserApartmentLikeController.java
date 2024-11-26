@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.home.common.response.SuccessResponse;
-import com.ssafy.home.dto.apartment.UserApartmentLikeDto;
+import com.ssafy.home.dto.apartment.ApartmentDetailDto;
 import com.ssafy.home.service.UserApartmentLikeService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,8 +39,8 @@ public class UserApartmentLikeController {
 
 	// 사용자가 좋아요한 아파트 보기 (리스트)
 	@GetMapping("/{userId}")
-	public SuccessResponse<List<UserApartmentLikeDto>> findLikesByUserId(@PathVariable int userId) {
-		List<UserApartmentLikeDto> likes = likeService.findLikesByUserId(userId);
+	public SuccessResponse<List<ApartmentDetailDto>> findLikesByUserId(@PathVariable int userId) {
+		List<ApartmentDetailDto> likes = likeService.findLikesByUserId(userId);
 		return SuccessResponse.of(likes);
 	}
 

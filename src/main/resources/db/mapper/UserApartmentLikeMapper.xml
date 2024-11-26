@@ -9,6 +9,27 @@
         <result property="aptSeq" column="apt_seq"/>
     </resultMap>
 
+    <resultMap id="ApartmentDetailResultMap" type="com.ssafy.home.dto.apartment.ApartmentDetailDto">
+        <result property="aptSeq" column="apt_seq"/>
+        <result property="sggCd" column="sgg_cd"/>
+        <result property="umdCd" column="umd_cd"/>
+        <result property="umdNm" column="umd_nm"/>
+        <result property="jibun" column="jibun"/>
+        <result property="roadNmSggCd" column="road_nm_sgg_cd"/>
+        <result property="roadNm" column="road_nm"/>
+        <result property="roadNmBonbun" column="road_nm_bonbun"/>
+        <result property="roadNmBubun" column="road_nm_bubun"/>
+        <result property="aptNm" column="apt_nm"/>
+        <result property="buildYear" column="build_year"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="aptImg" column="apt_img" javaType="java.lang.String"/>
+        <result property="excluUseAr" column="exclu_use_ar"/>
+        <result property="floor" column="floor"/>
+        <result property="description" column="description"/>
+        <result property="apartmentInfoId" column="apartment_info_id"/>
+    </resultMap>
+
     <!-- 좋아요 추가 -->
     <insert id="addLike" parameterType="com.ssafy.home.dto.apartment.UserApartmentLikeDto">
         INSERT INTO User_Apartment_Like (user_id, apt_seq)
@@ -24,10 +45,31 @@
     </delete>
 
     <!-- 좋아요 아파트 목록 조회 -->
-    <select id="findLikesByUserId" resultMap="UserApartmentLikeResultMap">
-        SELECT user_apartment_like_id, user_id, apt_seq
-        FROM User_Apartment_Like
-        WHERE user_id = #{userId}
+    <select id="findLikesByUserId" resultMap="ApartmentDetailResultMap">
+        SELECT a.apt_seq,
+               a.sgg_cd,
+               a.umd_cd,
+               a.umd_nm,
+               a.jibun,
+               a.road_nm_sgg_cd,
+               a.road_nm,
+               a.road_nm_bonbun,
+               a.road_nm_bubun,
+               a.apt_nm,
+               a.build_year,
+               a.latitude,
+               a.longitude,
+               ai.apt_img,
+               ai.exclu_use_ar,
+               ai.floor,
+               ai.description
+        FROM User_Apartment_Like ual
+                 JOIN
+             Apartment a ON ual.apt_seq = a.apt_seq
+                 JOIN
+             Apartment_Info ai ON a.apt_seq = ai.apt_seq
+        WHERE ual.user_id = #{userId};
+
     </select>
 
     <!--  좋아요했는지 여부 확인 -->
