@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.home.repository.ViewCountRepository">
+
+    <resultMap id="DailyViewsResultMap" type="com.ssafy.home.dto.views.ViewsDto">
+        <id property="aptSeq" column="apt_seq"/>
+        <result property="date" column="date"/>
+        <result property="hour" column="hour"/>
+        <result property="viewCount" column="view_count"/>
+    </resultMap>
+
+    <!-- 일별 조회수를 저장하는 SQL 쿼리 -->
+    <insert id="saveViewCount" parameterType="com.ssafy.home.dto.views.ViewsDto">
+        INSERT INTO real_time_views (apt_seq, date, hour, view_count)
+        VALUES (#{aptSeq}, #{date}, #{hour}, #{viewCount});
+        <!--        ON DUPLICATE KEY UPDATE-->
+        <!--        view_count = view_count + #{viewCount};-->
+    </insert>
+
+    <!-- 일별 조회수를 저장하는 SQL 쿼리 -->
+    <insert id="saveDailyViews" parameterType="com.ssafy.home.dto.views.ViewsDto">
+        INSERT INTO daily_views (apt_seq, date, view_count)
+        VALUES (#{aptSeq}, #{date}, #{viewCount});
+    </insert>
+
+</mapper>

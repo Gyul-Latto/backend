@@ -82,7 +82,7 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests((auth) -> auth
 				.requestMatchers(HttpMethod.POST, "/api/members").permitAll() // POST 요청만 허용
-				.requestMatchers("/**", "/login").permitAll() // 기타 경로는 모두 허용
+				.requestMatchers("/login").permitAll() // 기타 경로는 모두 허용
 				.anyRequest().authenticated() // 나머지 요청은 인증 필요
 			);
 
