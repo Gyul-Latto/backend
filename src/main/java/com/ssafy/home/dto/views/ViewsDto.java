@@ -7,7 +7,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class DailyViewsDto {
+public class ViewsDto {
 	private String aptSeq;
 	private Long viewCount;
 	private String date;

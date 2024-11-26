@@ -29,7 +29,7 @@ public class RedisViewCountRepository {
 	public void updateHourlyViewCount(String aptSeq, String timeSlot) {
 		// 현재 날짜를 "yyyy-MM-dd" 형식으로 가져오기
 		String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		String key = "apartment:views:" + currentDate + ":" + timeSlot;
+		String key = "apartment:views:hour:" + timeSlot;
 		log.info("Time: {} -> {} 아파트 조회수 증가", key, aptSeq);
 		// 조회수 1 증가 또는 새로 추가
 		redisTemplate.opsForZSet().incrementScore(key, aptSeq, 1);
@@ -60,7 +60,7 @@ public class RedisViewCountRepository {
 	 * Redis에서 특정 키 삭제
 	 * @param key 삭제할 Redis 키
 	 */
-	public void deleteRedisKey(String key) {
+	public void deleteKey(String key) {
 		redisTemplate.delete(key);
 	}
 

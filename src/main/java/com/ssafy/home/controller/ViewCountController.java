@@ -19,7 +19,7 @@ public class ViewCountController {
 
 	@GetMapping("/{aptSeq}")
 	public void updateViewCount(@PathVariable String aptSeq) {
-
+		viewCountService.updateViewCount(aptSeq);
 	}
 
 }
