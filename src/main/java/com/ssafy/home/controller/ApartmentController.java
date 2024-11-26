@@ -17,14 +17,14 @@ import com.ssafy.home.service.ApartmentService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/apt/search")
 @RequiredArgsConstructor
 public class ApartmentController {
 
 	private final ApartmentService apartmentService;
 
 	// 시/구/동 정보로 아파트 리스트 조회
-	@PostMapping("/apt/search/sido")
+	@PostMapping("/sido")
 	public SuccessResponse<List<ApartmentDetailDto>> searchApartments(@RequestBody DongCodeDto dongCodeDto) {
 
 		List<ApartmentDetailDto> apartments = apartmentService.searchApartments(
@@ -36,7 +36,7 @@ public class ApartmentController {
 	}
 
 	// 아파트 이름으로 검색
-	@GetMapping("/apt/search/name")
+	@GetMapping("/name")
 	public SuccessResponse<List<ApartmentDetailDto>> searchApartmentByName(
 		@RequestParam(value = "aptName", required = false) String aptName) {
 		if (aptName == null || aptName.isBlank()) {

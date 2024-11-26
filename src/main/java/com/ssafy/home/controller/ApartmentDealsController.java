@@ -13,12 +13,12 @@ import com.ssafy.home.service.ApartmentDealsService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/apt")
+@RequestMapping("/api/apt/search")
 @RequiredArgsConstructor
 public class ApartmentDealsController {
 	private final ApartmentDealsService service;
 
-	@GetMapping("/search/deals")
+	@GetMapping("/deals")
 	public List<ApartmentDealsDto> getDeals(@RequestParam String aptSeq) {
 		return service.getDealsByApartmentSeq(aptSeq);
 	}
